@@ -8,7 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class Admins extends Authenticatable
 {
-    protected $table = 'admin'; 
+    protected $table = 'admins'; 
     protected $primaryKey = 'id';
     public $incrementing = true;
     protected $keyType = 'int';
