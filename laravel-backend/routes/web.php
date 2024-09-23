@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AdminsController;
+use App\Http\Middleware\AdminAuth;
 
 Route::get('/', function () {
     return view('welcome');
@@ -37,6 +39,20 @@ Route::get('/HMS/admin/logout', function () {
 })->name('logout');
 
 
-Route::get('/HMS/admin/admin_panel_receptionist', function () {
+/*Route::get('/HMS/admin/admin_panel_receptionist', function () {
     return view('HMS/admin/admin_panel_receptionist');
-})->name('receptionist_admin_dashboard');
+})->name('receptionist_admin_dashboard');*/
+
+
+
+
+// admin auth
+// admin login page and authentication
+Route::get('admin/login', function () {return view('HMS/index');})->name('admin.login');
+Route::post('admin/login', [AdminsController::class, 'login'])->name('admin.login.post');
+Route::get('admin/dashboard', [AdminsController::class, 'dashboard'])->middleware('AdminAuth')->name('admin.dashboard');
+Route::post('admin/logout', [AdminsController::class, 'logout'])->name('admin.logout');
+Route::get('admin/logout', [AdminsController::class, 'logout'])->middleware('AdminAuth')->name('admin.logout.get');
+
+
+

@@ -144,27 +144,25 @@ function checklen()
 
 
                             <div class="tab-pane fade show" id="admin" role="tabpanel" aria-labelledby="profile-tab">
-                                <h3  class="register-heading">Login as Admin</h3>
-                                <form method="post" action="func3.php">
-                                <div class="row register-form">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <input type="text" class="form-control" placeholder="User Name *" name="username1" onkeydown="return alphaOnly(event);" required/>
+                                <h3 class="register-heading">Login as Admin</h3>
+                                <form method="post" action="{{ route('admin.login.post') }}">
+                                    @csrf
+                                    <div class="row register-form">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <input type="text" class="form-control" placeholder="User Name *" name="username" required />
+                                            </div>
                                         </div>
-
-
-
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <input type="password" class="form-control" placeholder="Password *" name="password2" required/>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <input type="password" class="form-control" placeholder="Password *" name="password" required />
+                                            </div>
+                                            <input type="submit" class="btnRegister" value="Login" />
                                         </div>
-
-                                        <input type="submit" class="btnRegister" name="adsub" value="Login"/>
                                     </div>
-                                </div>
-                            </form>
+                                </form>
                             </div>
+                            
                         </div>
 
                     </div>
