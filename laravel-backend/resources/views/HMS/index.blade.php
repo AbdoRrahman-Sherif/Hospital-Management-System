@@ -50,6 +50,17 @@ function checklen()
 <!------ Include the above in your HEAD tag ---------->
 <body>
 
+
+@if ($errors->any())
+<div class="alert alert-danger ">  
+        @foreach ($errors->all() as $error)
+            {{ $error }} <br />
+        @endforeach 
+</div>
+@endif
+
+
+
 @extends('HMS.nav')
 
 <div class="container register" style="font-family: 'IBM Plex Sans', sans-serif; ">
