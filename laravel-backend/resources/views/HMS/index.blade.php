@@ -50,7 +50,13 @@
 <!------ Include the above in your HEAD tag ---------->
 
 <body>
-
+    @if ($errors->any())
+    <div class="alert alert-danger ">  
+            @foreach ($errors->all() as $error)
+                {{ $error }} <br />
+            @endforeach 
+    </div>
+    @endif
     @extends('HMS.nav')
 
     <div class="container register" style="font-family: 'IBM Plex Sans', sans-serif; ">
@@ -160,27 +166,27 @@
 
                     <div class="tab-pane fade show" id="admin" role="tabpanel" aria-labelledby="profile-tab">
                         <h3 class="register-heading">Login as Admin</h3>
-                        <form method="post" action="func3.php">
+
+
+                        <form method="post" action="{{ route('admin.login.post') }}">
+                            @csrf
                             <div class="row register-form">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <input type="text" class="form-control" placeholder="User Name *"
-                                            name="username1" onkeydown="return alphaOnly(event);" required />
+                                        <input type="text" class="form-control" placeholder="User Name *" name="username" required />
                                     </div>
-
-
-
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <input type="password" class="form-control" placeholder="Password *"
-                                            name="password2" required />
+                                        <input type="password" class="form-control" placeholder="Password *" name="password" required />
                                     </div>
-
-                                    <input type="submit" class="btnRegister" name="adsub" value="Login" />
+                                    <input type="submit" class="btnRegister" value="Login" />
                                 </div>
                             </div>
                         </form>
+
+
+
                     </div>
                 </div>
 

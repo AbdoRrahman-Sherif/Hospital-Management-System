@@ -57,10 +57,20 @@
             }
         </style>
 
+
+
+<form id="logout-form" action="{{ route('admin.logout') }}" method="POST" style="display: none;">
+    @csrf
+</form>
+
+
+
+
+
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('logout') }}"><i class="fa fa-sign-out" aria-hidden="true"></i>Logout</a>
+                <li class="nav-item">                
+                    <a class="nav-link" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="fa fa-sign-out" aria-hidden="true"></i>Logout</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#"></a>
@@ -80,6 +90,28 @@
 </style>
 
 <body style="padding-top:50px;">
+
+    @if ($errors->any())
+    <div class="alert alert-danger ">  
+            @foreach ($errors->all() as $error)
+                {{ $error }} <br />
+            @endforeach 
+    </div>
+    @endif
+
+    @if (session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+    @endif
+
+    @if (session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+    @endif
+
+
     <div class="container-fluid" style="margin-top:50px;">
         <h3 style = "margin-left: 40%; padding-bottom: 20px;font-family: 'IBM Plex Sans', sans-serif;"> WELCOME
             RECEPTIONIST </h3>
@@ -344,7 +376,6 @@
                                     <th scope="col">Last Name</th>
                                     <th scope="col">Gender</th>
                                     <th scope="col">Email</th>
-                                    <th scope="col">Contact</th>
                                     <th scope="col">Doctor Name</th>
                                     <th scope="col">Consultancy Fees</th>
                                     <th scope="col">Appointment Date</th>
@@ -353,21 +384,21 @@
                                 </tr>
                             </thead>
                             <tbody>
-
+                                @foreach ($appointments as $appointment)
                                 <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>
-
+                                    <td>{{ $appointment->appointment_id ?? 'N/A' }}</td>
+                                    <td>{{ $appointment->patient_id  ?? 'N/A' }}</td>
+                                    <td>{{ $appointment->patient_first_name ?? 'N/A'  }}</td>
+                                    <td>{{ $appointment->patient_last_name ?? 'N/A'  }}</td>
+                                    <td>{{ $appointment->patient_gender ?? 'N/A'  }}</td>
+                                    <td>{{ $appointment->patient_email ?? 'N/A'  }}</td>                                    
+                                    <td>{{ $appointment->doctor_name ?? 'N/A'  }}</td>
+                                    <td>{{ $appointment->doctor_fees ?? 'N/A'  }}</td>
+                                    <td>{{ $appointment->appointment_date ?? 'N/A'  }}</td>
+                                    <td>{{ $appointment->appointment_time ?? 'N/A'  }}</td>
+                                    <td>{{ $appointment->appointment_status ?? 'N/A'  }}</td>
+                                </tr>
+                            @endforeach
                             </tbody>
                         </table>
                         <br>
@@ -378,7 +409,8 @@
 
                     <div class="tab-pane fade" id="list-settings" role="tabpanel"
                         aria-labelledby="list-settings-list">
-                        <form class="form-group" method="post" action="admin-panel1.php">
+                        <form class="form-group" method="post" action="{{ route('admin.addDoctor') }}" >
+                            @csrf
                             <div class="row">
                                 <div class="col-md-4"><label>Doctor Name:</label></div>
                                 <div class="col-md-8"><input type="text" class="form-control" name="doctor"
@@ -394,7 +426,7 @@
                                         <option value="Pediatrician" name="spec">Pediatrician</option>
                                     </select>
                                 </div><br><br>
-                                <div class="col-md-4"><label>Email ID:</label></div>
+                                <div class="col-md-4"><label>Email:</label></div>
                                 <div class="col-md-8"><input type="email" class="form-control" name="demail"
                                         required></div><br><br>
                                 <div class="col-md-4"><label>Password:</label></div>
@@ -402,7 +434,7 @@
                                         name="dpassword" id="dpassword" required></div><br><br>
                                 <div class="col-md-4"><label>Confirm Password:</label></div>
                                 <div class="col-md-8" id='cpass'><input type="password" class="form-control"
-                                        onkeyup='check();' name="cdpassword" id="cdpassword" required>&nbsp
+                                        onkeyup='check();' name="dpassword_confirmation" id="cdpassword" required>&nbsp
                                     &nbsp<span id='message'></span> </div><br><br>
 
 
@@ -416,17 +448,16 @@
 
                     <div class="tab-pane fade" id="list-settings1" role="tabpanel"
                         aria-labelledby="list-settings1-list">
-                        <form class="form-group" method="post" action="admin-panel1.php">
+                        <form class="form-group" method="post" action="{{ route('admin.deleteDoctor') }}" onsubmit="return confirm('Do you really want to delete?')">
+                            @csrf
                             <div class="row">
 
-                                <div class="col-md-4"><label>Email ID:</label></div>
-                                <div class="col-md-8"><input type="email" class="form-control" name="demail"
-                                        required></div><br><br>
-
+                                <div class="col-md-4"><label>Doctor ID:</label></div>
+                                <div class="col-md-8"><input type="number" class="form-control" name="doctor_id" required></div><br><br>
                             </div>
-                            <input type="submit" name="docsub1" value="Delete Doctor" class="btn btn-primary"
-                                onclick="confirm('do you really want to delete?')">
+                            <input type="submit" name="docsub1" value="Delete Doctor" class="btn btn-primary">
                         </form>
+
                     </div>
 
 
