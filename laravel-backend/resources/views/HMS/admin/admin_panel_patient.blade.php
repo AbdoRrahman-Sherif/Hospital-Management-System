@@ -75,7 +75,8 @@
 
     <div class="container-fluid" style="margin-top:50px;">
         <h3 style = "margin-left: 40%;  padding-bottom: 20px; font-family: 'IBM Plex Sans', sans-serif;"> Welcome
-            patientName
+            {{-- @dd($patientData); --}}
+            {{ $patientData['fName'] }}
         </h3>
         <div class="row">
             <div class="col-md-4" style="max-width:25%; margin-top: 3%">
