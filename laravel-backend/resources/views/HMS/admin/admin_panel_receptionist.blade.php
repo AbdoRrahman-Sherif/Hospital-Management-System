@@ -376,7 +376,6 @@
                                     <th scope="col">Last Name</th>
                                     <th scope="col">Gender</th>
                                     <th scope="col">Email</th>
-                                    <th scope="col">Contact</th>
                                     <th scope="col">Doctor Name</th>
                                     <th scope="col">Consultancy Fees</th>
                                     <th scope="col">Appointment Date</th>
@@ -385,21 +384,21 @@
                                 </tr>
                             </thead>
                             <tbody>
-
+                                @foreach ($appointments as $appointment)
                                 <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>
-
+                                    <td>{{ $appointment->appointment_id ?? 'N/A' }}</td>
+                                    <td>{{ $appointment->patient_id  ?? 'N/A' }}</td>
+                                    <td>{{ $appointment->patient_first_name ?? 'N/A'  }}</td>
+                                    <td>{{ $appointment->patient_last_name ?? 'N/A'  }}</td>
+                                    <td>{{ $appointment->patient_gender ?? 'N/A'  }}</td>
+                                    <td>{{ $appointment->patient_email ?? 'N/A'  }}</td>                                    
+                                    <td>{{ $appointment->doctor_name ?? 'N/A'  }}</td>
+                                    <td>{{ $appointment->doctor_fees ?? 'N/A'  }}</td>
+                                    <td>{{ $appointment->appointment_date ?? 'N/A'  }}</td>
+                                    <td>{{ $appointment->appointment_time ?? 'N/A'  }}</td>
+                                    <td>{{ $appointment->appointment_status ?? 'N/A'  }}</td>
+                                </tr>
+                            @endforeach
                             </tbody>
                         </table>
                         <br>
