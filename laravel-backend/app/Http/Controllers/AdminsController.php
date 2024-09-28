@@ -122,6 +122,12 @@ class AdminsController extends Controller
                             )
                             ->where('patients.id', '=', $contact)
                             ->get();
+                           
+                            $doctors = DB::table('doctors')
+                            ->select('id','name','email','password','fees','specialization')->get();
+                            $patients = DB::table('patients')
+                            ->select('id','fname','lname','email','password','gender')->get();
+
 
                     }
 
@@ -145,10 +151,13 @@ class AdminsController extends Controller
                             'appointments.currentStatus as appointment_status'
                         )->get();
 
-
+                        $doctors = DB::table('doctors')
+                        ->select('id','name','email','password','fees','specialization')->get();
+                        $patients = DB::table('patients')
+                        ->select('id','fname','lname','email','password','gender')->get();
                     }
 
-                    return view('HMS.admin.admin_panel_receptionist', compact('appointments'));
+                    return view('HMS.admin.admin_panel_receptionist', compact('appointments','doctors','patients'));
                 }
                 return redirect()->route('admin.login');
             }
