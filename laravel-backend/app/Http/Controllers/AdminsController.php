@@ -91,15 +91,44 @@ class AdminsController extends Controller
 
 
         //show admin(receptionist) dashboard (admin_panel_receptionist.blade.php)
-            public function dashboard()
+            public function dashboard(Request $request)
             {
-                // if (Auth::guard('admin')->check()) {
-                //     return view('HMS.admin.admin_panel_receptionist'); 
-                // }
+
 
                 if (Auth::guard('admin')->check()) {
 
-                    $appointments = DB::table('appointments')
+                    
+                    if ($request->has('app_contact')) {
+                        $request->validate([
+                            'app_contact' => 'required|integer',
+                        ]);
+
+                        $contact = $request->input('app_contact');
+                        $appointments = DB::table('appointments')
+                            ->join('patients', 'appointments.patient_id', '=', 'patients.id')
+                            ->join('doctors', 'appointments.doctor_id', '=', 'doctors.id')
+                            ->select(
+                                'appointments.id as appointment_id',
+                                'patients.id as patient_id',
+                                'patients.fName as patient_first_name',
+                                'patients.lName as patient_last_name',
+                                'patients.gender as patient_gender',
+                                'patients.email as patient_email',
+                                'doctors.name as doctor_name',
+                                'doctors.fees as doctor_fees',
+                                'appointments.date as appointment_date',
+                                'appointments.time as appointment_time',
+                                'appointments.currentStatus as appointment_status'
+                            )
+                            ->where('patients.id', '=', $contact)
+                            ->get();
+
+                    }
+
+
+                    else {
+
+                        $appointments = DB::table('appointments')
                         ->join('patients', 'appointments.patient_id', '=', 'patients.id')
                         ->join('doctors', 'appointments.doctor_id', '=', 'doctors.id')
                         ->select(
@@ -115,12 +144,12 @@ class AdminsController extends Controller
                             'appointments.time as appointment_time',
                             'appointments.currentStatus as appointment_status'
                         )->get();
-                    
+
+
+                    }
 
                     return view('HMS.admin.admin_panel_receptionist', compact('appointments'));
                 }
-
-
                 return redirect()->route('admin.login');
             }
 

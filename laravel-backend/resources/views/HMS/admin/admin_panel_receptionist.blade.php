@@ -357,10 +357,11 @@
                     <div class="tab-pane fade" id="list-app" role="tabpanel" aria-labelledby="list-pat-list">
 
                         <div class="col-md-8">
-                            <form class="form-group" action="appsearch.php" method="post">
+                            <form class="form-group" action={{route('admin.dashboard')}} method="get">
+                                @csrf
                                 <div class="row">
                                     <div class="col-md-10"><input type="text" name="app_contact"
-                                            placeholder="Enter Contact" class = "form-control"></div>
+                                            placeholder="Enter patient id" class = "form-control"></div>
                                     <div class="col-md-2"><input type="submit" name="app_search_submit"
                                             class="btn btn-primary" value="Search"></div>
                                 </div>
