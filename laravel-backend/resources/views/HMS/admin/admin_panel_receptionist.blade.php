@@ -271,15 +271,25 @@
                         <table class="table table-hover">
                             <thead>
                                 <tr>
+                                    <th scope="col">id</th>
                                     <th scope="col">Doctor Name</th>
-                                    <th scope="col">Specialization</th>
                                     <th scope="col">Email</th>
                                     <th scope="col">Password</th>
+                                    <th scope="col">Specialization</th>
                                     <th scope="col">Fees</th>
                                 </tr>
                             </thead>
                             <tbody>
-
+                                    @foreach ($doctors as $doctors)
+                                    <tr>
+                                        <td>{{$doctors->id}}</td>
+                                        <td>{{$doctors->name}}</td>
+                                        <td>{{$doctors->email}}</td>
+                                        <td>{{$doctors->password}}</td>
+                                        <td>{{$doctors->specialization}}</td>
+                                        <td>{{$doctors->fees}}</td>
+                                    </tr>
+                                    @endforeach
                             </tbody>
                         </table>
                         <br>
@@ -305,14 +315,22 @@
                                     <th scope="col">Patient ID</th>
                                     <th scope="col">First Name</th>
                                     <th scope="col">Last Name</th>
-                                    <th scope="col">Gender</th>
                                     <th scope="col">Email</th>
-                                    <th scope="col">Contact</th>
                                     <th scope="col">Password</th>
+                                    <th scope="col">Gender</th>
                                 </tr>
                             </thead>
                             <tbody>
-
+                            @foreach ($patients as $patients)
+                                    <tr>
+                                        <td>{{$patients->id}}</td>
+                                        <td>{{$patients->fname}}</td>
+                                        <td>{{$patients->lname}}</td>
+                                        <td>{{$patients->email}}</td>
+                                        <td>{{$patients->password}}</td>
+                                        <td>{{$patients->gender}}</td>
+                                    </tr>
+                                    @endforeach
                             </tbody>
                         </table>
                         <br>
