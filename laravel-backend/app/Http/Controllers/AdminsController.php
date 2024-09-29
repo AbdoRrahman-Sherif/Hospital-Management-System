@@ -124,7 +124,7 @@ class AdminsController extends Controller
                             ->get();
                            
                             $doctors = DB::table('doctors')
-                            ->select('id','name','email','password','fees','specialization')->get();
+                            ->select('id','name','email','password','fees','specialization')->whereNull('deletedAt')->get();
                             $patients = DB::table('patients')
                             ->select('id','fname','lname','email','password','gender')->get();
 
@@ -151,8 +151,7 @@ class AdminsController extends Controller
                             'appointments.currentStatus as appointment_status'
                         )->get();
 
-                        $doctors = DB::table('doctors')
-                        ->select('id','name','email','password','fees','specialization')->get();
+                        $doctors = DB::table('doctors')->select('id','name','email','password','fees','specialization')->whereNull('deletedAt')->get();
                         $patients = DB::table('patients')
                         ->select('id','fname','lname','email','password','gender')->get();
                     }
