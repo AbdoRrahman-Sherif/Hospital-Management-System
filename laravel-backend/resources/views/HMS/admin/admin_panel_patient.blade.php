@@ -169,7 +169,9 @@
                                     <center>
                                         <h4>Create an appointment</h4>
                                     </center><br>
-                                    <form class="form-group" method="post" action="admin-panel.php">
+                                    <form class="form-group" method="post"
+                                        action="{{ route('patient_appointment') }}">
+                                        @csrf
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <label for="spec">Specialization:</label>
@@ -178,7 +180,10 @@
                                                 <select name="spec" class="form-control" id="spec">
                                                     <option value="" disabled selected>Select Specialization
                                                     </option>
-
+                                                    @foreach ($SpecializationsData as $spec)
+                                                        <option value="{{ $spec }}">{{ $spec }}
+                                                        </option>
+                                                    @endforeach
                                                 </select>
                                             </div>
 
@@ -187,6 +192,7 @@
                                             <script>
                                                 document.getElementById('spec').onchange = function foo() {
                                                     let spec = this.value;
+
                                                     console.log(spec)
                                                     let docs = [...document.getElementById('doctor').options];
 
@@ -204,7 +210,12 @@
                                                 <select name="doctor" class="form-control" id="doctor"
                                                     required="required">
                                                     <option value="" disabled selected>Select Doctor</option>
-
+                                                    @foreach ($DoctorsData as $doctor)
+                                                        <option data-value="{{ $doctor['fees'] }}"
+                                                            data-spec="{{ $doctor['specialization'] }}"
+                                                            value="{{ $doctor['id'] }}">{{ $doctor['name'] }}
+                                                        </option>
+                                                    @endforeach
 
                                                 </select>
                                             </div><br /><br />
@@ -212,7 +223,9 @@
 
                                             <script>
                                                 document.getElementById('doctor').onchange = function updateFees(e) {
-                                                    var selection = document.querySelector(`[value=${this.value}]`).getAttribute('data-value');
+
+
+                                                    var selection = document.querySelector(`[value='${this.value}']`).getAttribute('data-value');
                                                     document.getElementById('docFees').value = selection;
                                                 };
                                             </script>
