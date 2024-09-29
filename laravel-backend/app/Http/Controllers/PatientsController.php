@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Doctors;
 use Illuminate\Support\Facades\Session;
 
 use App\Models\Patients;
+use App\Models\Appointments;
 use Illuminate\Http\Request;
 
 class PatientsController extends Controller
@@ -21,7 +23,17 @@ class PatientsController extends Controller
     {
         $patient_id = Session::get('patient_id');
         $patient = Patients::find($patient_id);
-        return view('HMS.admin.admin_panel_patient', ['patientData' => $patient]);
+
+        $Specializations = Doctors::distinct()->pluck('specialization');
+        $Doctors = Doctors::all()->toArray();
+
+
+
+        return view('HMS.admin.admin_panel_patient', [
+            'patientData' => $patient,
+            'SpecializationsData' => $Specializations,
+            'DoctorsData' => $Doctors
+        ]);
     }
     /**
      * Show the form for creating a new resource.
@@ -68,6 +80,27 @@ class PatientsController extends Controller
         dd('error');
     }
 
+
+    public function appointment(Request $request)
+    {
+        $request = request()->all();
+        $patient_id = Session::get('patient_id');
+
+        $appointment = new Appointments();
+        $appointment->date = $request['appdate'];
+        $appointment->time = $request['apptime'];
+        $appointment->currentStatus = 'Active';
+        $appointment->doctor_id = $request['doctor'];
+        $appointment->patient_id = $patient_id;
+        $appointment->prescription_id = 0;
+        $appointment->created_at = now()->format('Y-m-d');
+        $appointment->updated_at = now()->format('Y-m-d');
+
+        $appointment->save();
+
+
+        return to_route('patient_panel');
+    }
 
     /**
      * Display the specified resource.
