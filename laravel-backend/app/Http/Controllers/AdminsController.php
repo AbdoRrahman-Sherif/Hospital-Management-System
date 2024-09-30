@@ -124,7 +124,8 @@ class AdminsController extends Controller
                             ->get();
                             $doctors = $this->getDoctorsData(); 
                             $patients = $this->getPatientsData();
-                            $prescriptions = $this->getPrescriptionsData();                             
+                            $prescriptions = $this->getPrescriptionsData();  
+                            $messages= $this->getQueryData();                           
                     }
 
 
@@ -134,10 +135,11 @@ class AdminsController extends Controller
                         $doctors = $this->getDoctorsData(); 
                         $patients = $this->getPatientsData();
                         $prescriptions = $this->getPrescriptionsData();
+                        $messages= $this->getQueryData();
                         
                     }
 
-                    return view('HMS.admin.admin_panel_receptionist', compact('appointments','doctors','patients','prescriptions'));
+                    return view('HMS.admin.admin_panel_receptionist', compact('appointments','doctors','patients','prescriptions','messages'));
                 }
                 return redirect()->route('admin.login');
             }
@@ -174,12 +176,42 @@ class AdminsController extends Controller
                 ->select('id','fname','lname','email','password','gender')->get();
             }
             
+            // private function getPrescriptionsData(){
+            //     return DB::table('appointments')
+            //     ->join('prescriptions', 'appointments.prescription_id', '=', 'appointments.id')
+            //     ->join('patients', 'appointments.patient_id', '=', 'patients.id')
+            //     ->join('doctors', 'appointments.doctor_id', '=', 'doctors.id')
+            //     ->select('doctors.name as Doctor','patients.id as Patient_id','appointments.id as Appointment_id',
+            //     'patients.fname as First_name','patients.lname as Last_name', 'appointments.date as Appointment_date',
+            //     'appointments.time as Appointment_time','prescriptions.disease as Disease','prescriptions.allergy as Allergy',
+            //     'prescriptions.prescriptions as Prescription')->get();
+            // }
             private function getPrescriptionsData(){
                 //TODO
-            }
+                return DB::table('appointments')
+                ->join('patients', 'appointments.patient_id', '=', 'patients.id')
+                ->join('doctors', 'appointments.doctor_id', '=', 'doctors.id')
+                ->join('prescriptions', 'appointments.prescription_id', '=', 'prescriptions.id')
+                ->select(
+                    'doctors.name as doctor_name',
+                    'patients.id as patient_id',
+                    'appointments.id as appointment_id',
+                    'patients.fName as patient_first_name',
+                    'patients.lName as patient_last_name',
+                    'appointments.date as appointment_date',
+                    'appointments.time as appointment_time',
+                    'prescriptions.disease as prescription_disease',
+                    'prescriptions.allergy as prescription_allergy',
+                    'prescriptions.prescriptions as prescription_prescriptions'
+                )
+                ->get();
+
+}
+            
 
             private function getQueryData(){
-                //TODO
+                
+                return DB::table('messages')->select('name','email','phone','message')->get();
             }
 
 
@@ -258,8 +290,27 @@ class AdminsController extends Controller
 
                     return redirect()->back()->with('error', $e->getMessage())->withInput();
                 }
+
             }
 
+                    public function contactSubmit(Request $request){
+                        $validator = Validator::make($request->all(), ['txtName'=>'required|string','txtEmail'=>'required|email','txtPhone'=>'required|numeric','txtMsg'=>'required|string']);
+                        if ($validator->fails()) {
+                            return redirect()->back()->withErrors($validator)->withInput(); }
+                            try {
 
+                                DB::table('messages')
+                    ->insert(['name'=>$request->input('txtName'),'email'=>$request->input('txtEmail'),'phone'=>$request->input('txtPhone'),'message'=>$request->input('txtMsg')]);
+                    return redirect()->back()->with('success','message sent successfully');
+                        
+                            
+                            } catch (\Exception $e) {
+            
+                                return redirect()->back()->with('error', $e->getMessage())->withInput();
+                            }
+                            
+                        
+
+}
 
 }
