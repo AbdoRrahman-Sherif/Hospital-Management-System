@@ -169,7 +169,7 @@
                                     <center>
                                         <h4>Create an appointment</h4>
                                     </center><br>
-                                    <form class="form-group" method="post"
+                                    <form class="form-group" method="post" id="appointmentForm"
                                         action="{{ route('patient_appointment') }}">
                                         @csrf
                                         <div class="row">
@@ -287,7 +287,44 @@
 
                                             <div class="col-md-4"><label>Appointment Date</label></div>
                                             <div class="col-md-8"><input type="date"
-                                                    class="form-control datepicker" name="appdate"></div><br><br>
+                                                    class="form-control datepicker" id="appdate" name="appdate">
+                                            </div>
+                                            <br><br>
+
+
+                                            <script>
+                                                document.getElementById('appointmentForm').addEventListener('submit', function(event) {
+                                                    // Get the value of the date input
+                                                    console.log('helllloooo');
+
+                                                    const appointmentDate = document.getElementById('appdate').value;
+                                                    const errorMessage = document.getElementById('error-message');
+                                                    const today = new Date();
+                                                    const selectedDate = new Date(appointmentDate);
+
+                                                    // Clear any previous error messages
+                                                    errorMessage.textContent = '';
+
+                                                    // Check if the date is empty
+                                                    if (!appointmentDate) {
+                                                        errorMessage.textContent = 'Please select an appointment date.';
+                                                        event.preventDefault(); // Prevent form submission
+                                                        return;
+                                                    }
+
+                                                    // Check if the selected date is in the past
+                                                    if (selectedDate < today) {
+                                                        errorMessage.textContent = 'The appointment date cannot be in the past.';
+                                                        event.preventDefault(); // Prevent form submission
+                                                        return;
+                                                    }
+
+                                                    // Optionally, you can add further validation if needed
+                                                });
+                                            </script>
+
+
+
 
                                             <div class="col-md-4"><label>Appointment Time</label></div>
                                             <div class="col-md-8">
@@ -310,6 +347,8 @@
                                             </div>
                                             <div class="col-md-8"></div>
                                         </div>
+                                        <div id="error-message" style="color: red;"></div>
+
                                     </form>
                                 </div>
                             </div>
@@ -331,26 +370,44 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @foreach ($appointments as $appointment)
+                                    <tr>
+                                        <td>
+                                            {{ $appointment->doctor_name }}
+                                        </td>
+                                        <td>
+                                            {{ $appointment->fees }}
+                                        </td>
+                                        <td>
+                                            {{ $appointment->date }}
+                                        </td>
+                                        <td>
+                                            {{ $appointment->time }}
+                                        </td>
+                                        <td>
+                                            {{ $appointment->currentStatus }}
+                                        </td>
+                                        <td>
+                                            @if ($appointment->currentStatus == 'Active')
+                                                <form method="POST" action="{{ route('cancel_appointment') }}"
+                                                    onsubmit="return confirmCancel()">
+                                                    @csrf
+                                                    <input type="hidden" name="appointment"
+                                                        value="{{ $appointment->id }}">
+                                                    <button type="submit" class="btn btn-danger">Cancel</button>
+                                                </form>
 
-                                <tr>
-
-
-                                    <td>
-                                    </td>
-
-                                    <td>
-
-
-
-                                        <a href="#"
-                                            onClick="return confirm('Are you sure you want to cancel this appointment ?')"
-                                            title="Cancel Appointment" tooltip-placement="top"
-                                            tooltip="Remove"><button class="btn btn-danger">Cancel</button></a>
-
-
-                                    </td>
-                                </tr>
-
+                                                <script>
+                                                    function confirmCancel() {
+                                                        return confirm("Are you sure you want to cancel this appointment?");
+                                                    }
+                                                </script>
+                                            @else
+                                                Cancelled
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                         <br>
@@ -363,7 +420,6 @@
                         <table class="table table-hover">
                             <thead>
                                 <tr>
-
                                     <th scope="col">Doctor Name</th>
                                     <th scope="col">Appointment ID</th>
                                     <th scope="col">Appointment Date</th>
@@ -375,28 +431,44 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>
-                                        <form method="get">
-                                            <a href="">
-                                                <input type ="hidden" name="ID" value="" />
-                                                <input type = "submit" onclick="alert('Bill Paid Successfully');"
-                                                    name ="generate_bill" class = "btn btn-success"
-                                                    value="Pay Bill" />
-                                            </a>
-                                    </td>
-                                    </form>
+                                @foreach ($appointments as $appointment)
+                                    <tr>
+                                        <td>
+                                            {{ $appointment->doctor_name }}
+                                        </td>
+                                        <td>
+                                            {{ $appointment->id }}
+                                        </td>
+                                        <td>
+                                            {{ $appointment->date }}
+                                        </td>
+                                        <td>
+                                            {{ $appointment->time }}
+                                        </td>
+                                        <td>
+                                            {{ $appointment->disease }}
+                                        </td>
+                                        <td>
+                                            {{ $appointment->allergy }}
+                                        </td>
+                                        <td>
+                                            {{ $appointment->prescriptions }}
+                                        </td>
+                                        <td>
+                                            <form method="get">
+                                                <a href="">
+                                                    <input type ="hidden" name="ID" value="" />
+                                                    <input type = "submit" onclick="alert('Bill Paid Successfully');"
+                                                        name ="generate_bill" class = "btn btn-success"
+                                                        value="Pay Bill" />
+                                                </a>
+                                        </td>
+
+                                        </form>
 
 
-                                </tr>
-
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                         <br>
