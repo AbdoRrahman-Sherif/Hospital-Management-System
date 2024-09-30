@@ -4,6 +4,7 @@ use App\Http\Controllers\PatientsController;
 use App\Models\Patients;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminsController;
+use Illuminate\Support\Facades\Auth;
 
 
 Route::get('/', function () {
@@ -33,6 +34,7 @@ Route::get('/HMS/patient_login', function () {
 Route::post('/HMS/patient_login', [PatientsController::class, 'login'])->name('patient_login');
 
 Route::post('/HMS/patient_store', [PatientsController::class, 'store'])->name('patient_store');
+Route::post('/HMS/cancel_appointment', [PatientsController::class, 'appointmentCancel'])->name('cancel_appointment');
 
 Route::post('/HMS/patient_appointment', [PatientsController::class, 'appointment'])->name('patient_appointment');
 
@@ -46,6 +48,9 @@ Route::get('/HMS/admin/admin_panel_patient', function () {
 })->name('patient_admin_dashboard');
 
 Route::get('/HMS/admin/patient_logout', function () {
+    Auth::logout();
+    session()->invalidate();
+    session()->regenerateToken();
     return view('HMS/admin/patient_logout');
 })->name('patient_logout');
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Doctors;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
 
 use App\Models\Patients;
 use App\Models\Appointments;
@@ -29,15 +30,30 @@ class PatientsController extends Controller
 
 
 
+        $appointments = DB::table('appointments')->join('doctors', 'appointments.doctor_id', '=', 'doctors.id')->join('prescriptions', 'appointments.prescription_id', '=', 'prescriptions.id')->where('appointments.patient_id', $patient_id)->select('appointments.*', 'doctors.name as doctor_name', 'doctors.fees as fees', 'prescriptions.disease as disease', 'prescriptions.allergy as allergy', 'prescriptions.prescriptions as prescriptions')->get()->toArray();
+
+
         return view('HMS.admin.admin_panel_patient', [
             'patientData' => $patient,
             'SpecializationsData' => $Specializations,
-            'DoctorsData' => $Doctors
+            'DoctorsData' => $Doctors,
+            'appointments' => $appointments
         ]);
     }
-    /**
-     * Show the form for creating a new resource.
-     */
+
+
+
+    public function appointmentCancel(Request $request)
+    {
+        $appointment = Appointments::find($request->appointment);
+
+        $appointment->currentStatus = 'cancelledByPatient';
+        $appointment->save();
+        return to_route('patient_panel');
+    }
+
+
+
     public function create()
     {
         //
@@ -92,7 +108,7 @@ class PatientsController extends Controller
         $appointment->currentStatus = 'Active';
         $appointment->doctor_id = $request['doctor'];
         $appointment->patient_id = $patient_id;
-        $appointment->prescription_id = 0;
+        $appointment->prescription_id = 1;
         $appointment->created_at = now()->format('Y-m-d');
         $appointment->updated_at = now()->format('Y-m-d');
 
@@ -105,6 +121,9 @@ class PatientsController extends Controller
     /**
      * Display the specified resource.
      */
+
+
+
     public function show(Patients $patients)
     {
         //
