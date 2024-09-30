@@ -361,6 +361,24 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                    @foreach ($prescriptions as $prescription)
+                                        <tr>
+                                            <td>{{ $prescription->doctor_name ?? 'N/A' }}</td>
+                                            <td>{{ $prescription->patient_id ?? 'N/A' }}</td>
+                                            <td>{{ $prescription->appointment_id ?? 'N/A' }}</td>
+                                            <td>{{ $prescription->patient_first_name ?? 'N/A' }}</td>
+                                            <td>{{ $prescription->patient_last_name ?? 'N/A' }}</td>
+                                            <td>{{ $prescription->appointment_date ?? 'N/A' }}</td>
+                                            <td>{{ $prescription->appointment_time ?? 'N/A' }}</td>
+                                            <td>{{ $prescription->prescription_disease ?? 'N/A' }}</td>
+                                            <td>{{ $prescription->prescription_allergy ?? 'N/A' }}</td>
+                                            <td>{{ $prescription->prescription_prescriptions ?? 'N/A' }}</td>
+
+
+                                        </tr>                                            
+                                   @endforeach
+
+                                    
 
                                     </tbody>
                                 </table>
@@ -507,12 +525,15 @@
                             </thead>
                             <tbody>
 
+                            @foreach ($messages as $message)
                                 <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td>{{ $message->name ?? 'N/A' }}</td>
+                                    <td>{{ $message->email  ?? 'N/A' }}</td>
+                                    <td>{{ $message->phone ?? 'N/A'  }}</td>
+                                    <td>{{ $message->message ?? 'N/A'  }}</td>
+                                    
                                 </tr>
+                            @endforeach
 
                             </tbody>
                         </table>

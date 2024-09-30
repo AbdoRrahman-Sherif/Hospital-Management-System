@@ -32,15 +32,35 @@
 </style>
 </head>
 <body>
+@if (session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+    @endif
 
 @extends('HMS.nav')
+@if ($errors->any())
+    <div class="alert alert-danger ">  
+            @foreach ($errors->all() as $error)
+                {{ $error }} <br />
+            @endforeach 
+    </div>
+    @endif
+
+    @if (session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+    @endif
+
 
 
     <div class="container contact-form" style="font-family: 'IBM Plex Sans', sans-serif;">
             <div class="contact-image">
                 <img src="https://image.ibb.co/kUagtU/rocket_contact.png" alt="rocket_contact"/>
             </div>
-            <form method="post" action="contact.php">
+            <form method="post" action={{route('contact.submit')}}>
+                @csrf
                 <h3>Drop Us a Message</h3>
                <div class="row">
                     <div class="col-md-6">
@@ -68,6 +88,3 @@
 
 </body>
 </html>
-
-
-

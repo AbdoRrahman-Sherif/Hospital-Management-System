@@ -90,3 +90,5 @@ Route::post('admin/add-doctor', [AdminsController::class, 'addDoctor'])->middlew
 // admin delete doctor
 
 Route::post('admin/delete-doctor', [AdminsController::class, 'deleteDoctor'])->name('admin.deleteDoctor');
+// submit contact
+Route::post('contact/submit', [AdminsController::class, 'contactSubmit'])->name('contact.submit');
