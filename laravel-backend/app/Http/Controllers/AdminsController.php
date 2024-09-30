@@ -98,11 +98,11 @@ class AdminsController extends Controller
                 if (Auth::guard('admin')->check()) {
 
                     
-                    if ($request->has('app_contact')) {
+                    if ($request->has('app_contact'))     //if appointments by patient_id (contact)
+                    {   
                         $request->validate([
                             'app_contact' => 'required|integer',
                         ]);
-
                         $contact = $request->input('app_contact');
                         $appointments = DB::table('appointments')
                             ->join('patients', 'appointments.patient_id', '=', 'patients.id')
@@ -122,44 +122,70 @@ class AdminsController extends Controller
                             )
                             ->where('patients.id', '=', $contact)
                             ->get();
-                           
-                            $doctors = DB::table('doctors')
-                            ->select('id','name','email','password','fees','specialization')->whereNull('deletedAt')->get();
-                            $patients = DB::table('patients')
-                            ->select('id','fname','lname','email','password','gender')->get();
-
-
+                            $doctors = $this->getDoctorsData(); 
+                            $patients = $this->getPatientsData();
+                            $prescriptions = $this->getPrescriptionsData();                             
                     }
 
 
                     else {
 
-                        $appointments = DB::table('appointments')
-                        ->join('patients', 'appointments.patient_id', '=', 'patients.id')
-                        ->join('doctors', 'appointments.doctor_id', '=', 'doctors.id')
-                        ->select(
-                            'appointments.id as appointment_id',
-                            'patients.id as patient_id',
-                            'patients.fName as patient_first_name',
-                            'patients.lName as patient_last_name',
-                            'patients.gender as patient_gender',
-                            'patients.email as patient_email',
-                            'doctors.name as doctor_name',
-                            'doctors.fees as doctor_fees',
-                            'appointments.date as appointment_date',
-                            'appointments.time as appointment_time',
-                            'appointments.currentStatus as appointment_status'
-                        )->get();
-
-                        $doctors = DB::table('doctors')->select('id','name','email','password','fees','specialization')->whereNull('deletedAt')->get();
-                        $patients = DB::table('patients')
-                        ->select('id','fname','lname','email','password','gender')->get();
+                        $appointments = $this->getAppointmentsData();
+                        $doctors = $this->getDoctorsData(); 
+                        $patients = $this->getPatientsData();
+                        $prescriptions = $this->getPrescriptionsData();
+                        
                     }
 
-                    return view('HMS.admin.admin_panel_receptionist', compact('appointments','doctors','patients'));
+                    return view('HMS.admin.admin_panel_receptionist', compact('appointments','doctors','patients','prescriptions'));
                 }
                 return redirect()->route('admin.login');
             }
+
+            private function getAppointmentsData(){
+
+                return DB::table('appointments')
+                ->join('patients', 'appointments.patient_id', '=', 'patients.id')
+                ->join('doctors', 'appointments.doctor_id', '=', 'doctors.id')
+                ->select(
+                    'appointments.id as appointment_id',
+                    'patients.id as patient_id',
+                    'patients.fName as patient_first_name',
+                    'patients.lName as patient_last_name',
+                    'patients.gender as patient_gender',
+                    'patients.email as patient_email',
+                    'doctors.name as doctor_name',
+                    'doctors.fees as doctor_fees',
+                    'appointments.date as appointment_date',
+                    'appointments.time as appointment_time',
+                    'appointments.currentStatus as appointment_status'
+                )->get();
+
+            }
+
+            private function getDoctorsData()
+            {
+                return DB::table('doctors')->select('id','name','email','password','fees','specialization')->whereNull('deletedAt')->get();
+            }
+            
+            private function getPatientsData()
+            {
+                return DB::table('patients')
+                ->select('id','fname','lname','email','password','gender')->get();
+            }
+            
+            private function getPrescriptionsData(){
+                //TODO
+            }
+
+            private function getQueryData(){
+                //TODO
+            }
+
+
+
+
+
 
     
         // logout
