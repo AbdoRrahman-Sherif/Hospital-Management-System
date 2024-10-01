@@ -259,10 +259,11 @@
 
 
                         <div class="col-md-8">
-                            <form class="form-group" action="doctorsearch.php" method="post">
+                            <form class="form-group" action={{route('admin.dashboard')}} method="get">
+                                @csrf
                                 <div class="row">
-                                    <div class="col-md-10"><input type="text" name="doctor_contact"
-                                            placeholder="Enter Email ID" class = "form-control"></div>
+                                    <div class="col-md-10"><input type="text" name="doctor_name"
+                                            placeholder="Enter Name" class = "form-control"></div>
                                     <div class="col-md-2"><input type="submit" name="doctor_search_submit"
                                             class="btn btn-primary" value="Search"></div>
                                 </div>
@@ -299,10 +300,11 @@
                     <div class="tab-pane fade" id="list-pat" role="tabpanel" aria-labelledby="list-pat-list">
 
                         <div class="col-md-8">
-                            <form class="form-group" action="patientsearch.php" method="post">
+                            <form class="form-group" action={{route('admin.dashboard')}} method="get">
+                                @csrf
                                 <div class="row">
-                                    <div class="col-md-10"><input type="text" name="patient_contact"
-                                            placeholder="Enter Contact" class = "form-control"></div>
+                                    <div class="col-md-10"><input type="text" name="patient_email"
+                                            placeholder="Enter Email" class = "form-control"></div>
                                     <div class="col-md-2"><input type="submit" name="patient_search_submit"
                                             class="btn btn-primary" value="Search"></div>
                                 </div>
@@ -504,7 +506,8 @@
                     <div class="tab-pane fade" id="list-mes" role="tabpanel" aria-labelledby="list-mes-list">
 
                         <div class="col-md-8">
-                            <form class="form-group" action="messearch.php" method="post">
+                            <form class="form-group" action={{route('admin.dashboard')}} method="get">
+                                @csrf
                                 <div class="row">
                                     <div class="col-md-10"><input type="text" name="mes_contact"
                                             placeholder="Enter Contact" class = "form-control"></div>
