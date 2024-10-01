@@ -71,7 +71,7 @@
                             <input type="email" name="txtEmail" class="form-control" placeholder="Your Email *" value="" required />
                         </div>
                         <div class="form-group">
-                            <input type="tel" name="txtPhone" class="form-control" placeholder="Your Phone Number *" value="" minlength="10" maxlength="10" required />
+                            <input type="tel" name="txtPhone" class="form-control" placeholder="Your Phone Number *" value="" minlength="10" maxlength="11" required />
                         </div>
                         <div class="form-group" >
                             <input type="submit" name="btnSubmit" class="btnContact"   value="Send Message" />

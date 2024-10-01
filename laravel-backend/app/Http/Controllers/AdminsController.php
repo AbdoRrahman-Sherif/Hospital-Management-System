@@ -70,7 +70,7 @@ class AdminsController extends Controller
     }
 
 
-    // Admin Auth
+    // admin Auth
         // admin login
             public function login(Request $request)
             {
@@ -90,7 +90,7 @@ class AdminsController extends Controller
             }
 
 
-        //show admin(receptionist) dashboard (admin_panel_receptionist.blade.php)
+        // show admin(receptionist) dashboard (admin_panel_receptionist.blade.php)
             public function dashboard(Request $request)
             {
 
@@ -98,7 +98,7 @@ class AdminsController extends Controller
                 if (Auth::guard('admin')->check()) {
 
                     
-                    if ($request->has('app_contact'))     //if appointments by patient_id (contact)
+                    if ($request->has('app_contact'))     // search appointments by patient_id (contact)
                     {   
                         $request->validate([
                             'app_contact' => 'required|integer',
@@ -127,7 +127,39 @@ class AdminsController extends Controller
                             $prescriptions = $this->getPrescriptionsData();  
                             $messages= $this->getQueryData();                           
                     }
-
+                    elseif ($request->has('doctor_name')){
+                        $request->validate([
+                            'doctor_name' => 'required|string',
+                        ]);
+                        $doctors_name = $request->input('doctor_name');
+                        $doctors = DB::table('doctors')->select('id','name','email','password','fees','specialization')->whereNull('deletedAt')->where('name', '=', $doctors_name)->get();
+                        $appointments = $this->getAppointmentsData();
+                        $patients = $this->getPatientsData();
+                        $prescriptions = $this->getPrescriptionsData();
+                        $messages= $this->getQueryData();
+                    } 
+                    elseif ($request->has('patient_email')){
+                        $request->validate([
+                            'patient_email' => 'required|email',
+                        ]);
+                        $patient_email= $request->input('patient_email');
+                        $patients = DB::table('patients')->select('id','fname','lname','email','password','gender')->where('email', '=', $patient_email)->get();
+                        $appointments = $this->getAppointmentsData();
+                        $doctors = $this->getDoctorsData();
+                        $prescriptions = $this->getPrescriptionsData();
+                        $messages= $this->getQueryData();
+                    } 
+                    elseif ($request->has('mes_contact')){
+                        $request->validate([
+                            'mes_contact' => 'required|numeric',
+                        ]);
+                        $contact = $request->input('mes_contact');
+                        $messages= DB::table('messages')->select('name','email','phone','message')->where('phone', '=', $contact)->get();
+                        $appointments = $this->getAppointmentsData();
+                        $doctors = $this->getDoctorsData();
+                        $patients = $this->getPatientsData();
+                        $prescriptions = $this->getPrescriptionsData();
+                    }
 
                     else {
 
@@ -176,18 +208,8 @@ class AdminsController extends Controller
                 ->select('id','fname','lname','email','password','gender')->get();
             }
             
-            // private function getPrescriptionsData(){
-            //     return DB::table('appointments')
-            //     ->join('prescriptions', 'appointments.prescription_id', '=', 'appointments.id')
-            //     ->join('patients', 'appointments.patient_id', '=', 'patients.id')
-            //     ->join('doctors', 'appointments.doctor_id', '=', 'doctors.id')
-            //     ->select('doctors.name as Doctor','patients.id as Patient_id','appointments.id as Appointment_id',
-            //     'patients.fname as First_name','patients.lname as Last_name', 'appointments.date as Appointment_date',
-            //     'appointments.time as Appointment_time','prescriptions.disease as Disease','prescriptions.allergy as Allergy',
-            //     'prescriptions.prescriptions as Prescription')->get();
-            // }
             private function getPrescriptionsData(){
-                //TODO
+                
                 return DB::table('appointments')
                 ->join('patients', 'appointments.patient_id', '=', 'patients.id')
                 ->join('doctors', 'appointments.doctor_id', '=', 'doctors.id')
