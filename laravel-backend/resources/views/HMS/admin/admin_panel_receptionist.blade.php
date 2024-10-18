@@ -304,7 +304,6 @@
                                     <th scope="col">First Name</th>
                                     <th scope="col">Last Name</th>
                                     <th scope="col">Email</th>
-                                    <th scope="col">Password</th>
                                     <th scope="col">Gender</th>
                                 </tr>
                             </thead>
@@ -315,7 +314,6 @@
                                         <td>{{$patients->fname}}</td>
                                         <td>{{$patients->lname}}</td>
                                         <td>{{$patients->email}}</td>
-                                        <td>{{$patients->password}}</td>
                                         <td>{{$patients->gender}}</td>
                                     </tr>
                                     @endforeach

@@ -84,6 +84,16 @@ class PrescriptionsController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
+
+     public function show(Prescriptions $prescription)
+     {
+         // Pass the existing prescription data to the edit view
+         return view('hms.admin.edit_prescription', [
+             'prescription' => $prescription,
+             'patient_id' => $prescription->patient_id,
+             'appointment_id' => $prescription->appointment_id,
+         ]);
+     }
     public function edit(Prescriptions $prescription)
     {
         // Pass the existing prescription data to the edit view

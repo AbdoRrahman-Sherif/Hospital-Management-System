@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\Doctors;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use App\Models\Appointments;
+
 
 
 class AdminsController extends Controller
@@ -302,10 +304,22 @@ class AdminsController extends Controller
             
                 try {
 
-                    $doctor = Doctors::findOrFail($request->input('doctor_id'));
+                    $doctor = Doctors::findOrFail($request->doctor_id);
                     $doctor->deletedBy =auth()->guard('admin')->user()->id;
                     $doctor->save();
+
+                    //delete doc pending appointments
+                    $appointments = Appointments::where('doctor_id', $request->doctor_id)->get();
+                    foreach ($appointments as $appointment) {
+                        if ($appointment->CurrentStatus == 'Active') {
+                            $appointment->CurrentStatus = 'CancelledByDoctor';
+                            $appointment->save();
+                        }
+                    }
+
                     $doctor->delete();
+
+
             
                     return redirect()->route('admin.dashboard')->with('success', 'Doctor deleted');
                 } catch (\Exception $e) {

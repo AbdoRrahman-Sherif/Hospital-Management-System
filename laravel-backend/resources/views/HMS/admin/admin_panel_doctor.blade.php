@@ -148,12 +148,12 @@
                         <td>{{ $appointment->patient ? $appointment->patient->contact : 'N/A' }}</td>
                         <td>{{ $appointment->date }}</td>
                         <td>{{ $appointment->time }}</td>
-                        <td>{{ $appointment->currentStatus }}</td>
+                        <td>{{ $appointment->CurrentStatus }}</td>
                         <td>{{ $appointment->doctor ? $appointment->doctor->name : 'N/A' }}</td>
                         <td>
-                            @if ($appointment->currentStatus === 'CancelledByDoctor' || $appointment->currentStatus === 'CancelledByPatient')
+                            @if ($appointment->CurrentStatus === 'CancelledByDoctor' || $appointment->CurrentStatus === 'CancelledByPatient')
                                 <span class="badge badge-secondary">Cancelled</span>
-                            @elseif ($appointment->currentStatus === 'Done')
+                            @elseif ($appointment->CurrentStatus === 'Done')
                             <span class="badge badge-secondary">done</span>
                             @else
                                 <form action="{{ route('appointments.cancel', $appointment->id) }}" method="POST" style="display:inline;">
