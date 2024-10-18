@@ -18,14 +18,16 @@ class PrescriptionsController extends Controller
     {
         // Fetch prescriptions with related patient and appointment data
         $prescriptions = Prescriptions::with(['patient', 'appointment'])->get();
-
+        
+        // Debugging line
+        Log::info('Number of prescriptions retrieved: ' . $prescriptions->count());
+    
         // Fetch all appointments to pass to the view
         $appointments = Appointments::all();
-
+    
         return view('hms.admin.admin_panel_doctor', compact('prescriptions', 'appointments'));
     }
-
-    /**
+        /**
      * Show the form for creating a new resource.
      */
     public function create(Request $request)
@@ -50,7 +52,8 @@ class PrescriptionsController extends Controller
             'patient' => $patient,
         ]);
     }
-        /**
+
+    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
@@ -63,23 +66,21 @@ class PrescriptionsController extends Controller
             'allergy' => 'nullable|string|max:255',
             'disease' => 'required|string|max:255',
         ]);
-
+    
         // Create a new prescription
         $prescription = Prescriptions::create($request->only(['patient_id', 'appointment_id', 'prescriptions', 'allergy', 'disease']));
-
+    
+        // Update the appointment with the new prescription and set currentStatus to "done"
+        Appointments::where('id', $prescription->appointment_id)
+            ->update([
+                'prescription_id' => $prescription->id,
+                'currentStatus' => 'done', // Set currentStatus to "done"
+            ]);
+    
         // Redirect to the prescriptions index with a success message
         return redirect()->route('prescriptions.index')->with('success', 'Prescription created successfully!');
     }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Prescriptions $prescription)
-    {
-        // Pass the prescription to the view
-        return view('hms.admin.show_prescription', compact('prescription'));
-    }
-
+    
     /**
      * Show the form for editing the specified resource.
      */
@@ -117,12 +118,19 @@ class PrescriptionsController extends Controller
     public function destroy($id)
     {
         try {
+            // Find the prescription to be deleted
+            $prescription = Prescriptions::findOrFail($id);
+    
+            // Update the appointment's currentStatus to 'active'
+            Appointments::where('id', $prescription->appointment_id)
+                ->update(['currentStatus' => 'active']);
+    
             // Disable foreign key checks
             DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-    
-            $prescription = Prescriptions::findOrFail($id);
+            
+            // Force delete the prescription
             $prescription->forceDelete();
-    
+            
             // Enable foreign key checks back
             DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     
@@ -130,12 +138,12 @@ class PrescriptionsController extends Controller
         } catch (\Exception $e) {
             // Enable foreign key checks back in case of an exception
             DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-    
+            
             // Log the error message for debugging
             Log::error('Error deleting prescription: ' . $e->getMessage());
-    
+            
             // Redirect back with the error message
             return redirect()->route('prescriptions.index')->with('error', 'Failed to delete prescription: ' . $e->getMessage());
         }
     }
-                }
+    }

@@ -151,8 +151,10 @@
                         <td>{{ $appointment->currentStatus }}</td>
                         <td>{{ $appointment->doctor ? $appointment->doctor->name : 'N/A' }}</td>
                         <td>
-                            @if ($appointment->currentStatus === 'cancelledByDoctor' || $appointment->currentStatus === 'cancelledByPatient')
+                            @if ($appointment->currentStatus === 'CancelledByDoctor' || $appointment->currentStatus === 'CancelledByPatient')
                                 <span class="badge badge-secondary">Cancelled</span>
+                            @elseif ($appointment->currentStatus === 'Done')
+                            <span class="badge badge-secondary">done</span>
                             @else
                                 <form action="{{ route('appointments.cancel', $appointment->id) }}" method="POST" style="display:inline;">
                                     @csrf

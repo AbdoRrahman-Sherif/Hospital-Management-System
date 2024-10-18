@@ -361,24 +361,24 @@
                                             {{ $appointment->currentStatus }}
                                         </td>
                                         <td>
-                                            @if ($appointment->currentStatus == 'Active')
-                                                <form method="POST" action="{{ route('cancel_appointment') }}"
-                                                    onsubmit="return confirmCancel()">
-                                                    @csrf
-                                                    <input type="hidden" name="appointment"
-                                                        value="{{ $appointment->id }}">
-                                                    <button type="submit" class="btn btn-danger">Cancel</button>
-                                                </form>
+    @if ($appointment->currentStatus == 'Done')
+        <span class="text-success">Done</span> <!-- Display "Done" in green color -->
+    @elseif ($appointment->currentStatus == 'Active')
+        <form method="POST" action="{{ route('cancel_appointment') }}" onsubmit="return confirmCancel()">
+            @csrf
+            <input type="hidden" name="appointment" value="{{ $appointment->id }}">
+            <button type="submit" class="btn btn-danger">Cancel</button>
+        </form>
 
-                                                <script>
-                                                    function confirmCancel() {
-                                                        return confirm("Are you sure you want to cancel this appointment?");
-                                                    }
-                                                </script>
-                                            @else
-                                                Cancelled
-                                            @endif
-                                        </td>
+        <script>
+            function confirmCancel() {
+                return confirm("Are you sure you want to cancel this appointment?");
+            }
+        </script>
+    @else
+        <span class="text-danger">Cancelled</span> <!-- Display "Cancelled" in red color -->
+    @endif
+</td>
                                     </tr>
                                 @endforeach
                             </tbody>

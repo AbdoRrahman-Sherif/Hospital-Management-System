@@ -271,7 +271,7 @@ class AdminsController extends Controller
                 Doctors::create([
                     'name' => $request->input('doctor'),
                     'email' => $request->input('demail'),
-                    'password' => Hash::make($request->input('dpassword')),
+                    'password' =>  $request->input('dpassword'),
                     'fees' => $request->input('docFees'),
                     'specialization' => $request->input('special'),
                     'admin_id' => auth()->guard('admin')->user()->id,

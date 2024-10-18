@@ -323,17 +323,9 @@
                         </table>
                         <br>
                     </div>
-
-
                     <div class="tab-pane fade" id="list-pres" role="tabpanel" aria-labelledby="list-pres-list">
-
-                        <div class="col-md-8">
-
-                            <div class="row">
-
-
-
-                                <table class="table table-hover">
+    <div class="col-md-8">
+    <table class="table table-hover">
                                     <thead>
                                         <tr>
                                             <th scope="col">Doctor</th>
@@ -363,19 +355,16 @@
                                             <td>{{ $prescription->prescription_prescriptions ?? 'N/A' }}</td>
 
 
-                                        </tr>                                            
+                                        </tr>
                                    @endforeach
 
-                                    
+
 
                                     </tbody>
                                 </table>
-                                <br>
-                            </div>
-                        </div>
-                    </div>
-
-
+        <br>
+    </div>
+</div>
 
 
                     <div class="tab-pane fade" id="list-app" role="tabpanel" aria-labelledby="list-pat-list">
